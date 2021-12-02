@@ -1,23 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import TextField from "@mui/material/TextField";
+import Signup from "./pages/Signup";
+import Homepage from "./pages/Homepage";
+import AdminPage from "./pages/AdminPage";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
 function App() {
+  const [isLoggedin, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    localStorage.getItem("role") ? setIsLoggedIn(true) : setIsLoggedIn(false);
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/* <Signup /> */}
+      <Router>
+        <Routes>
+          {isLoggedin && localStorage.getItem("role") === "user" && (
+            <Route path="/" exact element={<Homepage />} />
+          )}
+          {isLoggedin && localStorage.getItem("role") === "admin" && (
+            <Route path="/" exact element={<AdminPage />} />
+          )}
+
+          {!isLoggedin && <Route path="/" exact element={<Signup />} />}
+          {/* {isLoggedin && <Route path="/" exact element={<Homepage />} />} */}
+        </Routes>
+      </Router>
+      {/* <Homepage /> */}
+      {/* <AdminPage /> */}
     </div>
   );
 }
